@@ -22,3 +22,54 @@ angular.module('starter', ['ionic'])
     }
   });
 })
+.controller('weatherCtrl', function($http) {
+  var weather = this;
+  weather.placeholder = "http://placehold.it/350x150";
+  weather.city = "--";
+  weather.state = "--";
+
+
+ 
+    var apiKey = '32da10273b3e8206'; 
+    var url = "http://api.wunderground.com/api/32da10273b3e8206/conditions/forecast/geolookup/q/autoip.json"
+    
+    $http.get(url).then(function(res) {
+      
+      weather.temp = res.data.current_observation.temp_f;
+      weather.placeholder = res.data.forecast.txt_forecast.forecastday[0].icon_url;
+      weather.city = res.data.location.city;
+      weather.state = res.data.location.state;
+      console.log("object from wunderground", res.data.forecast, weather.placeholder);
+
+    })
+  
+
+  weather.temp = "--"
+
+  weather.search = function (term) {
+
+    console.log(term);
+    var url = "http://api.wunderground.com/api/32da10273b3e8206/conditions/forecast/geolookup/q/" + term + ".json";
+
+    $http.get(url).then(function(res) {
+      
+      weather.temp = res.data.current_observation.temp_f;
+      weather.placeholder = res.data.forecast.txt_forecast.forecastday[0].icon_url;
+      weather.city = res.data.location.city;
+      weather.state = res.data.location.state;
+      console.log("object from wunderground", res.data.forecast, weather.placeholder, weather.city);
+
+    })
+  };
+  
+});
+// .config(function ($stateProvider, $urlRouterProvider) {
+
+//   $stateProvider.state("root",{
+//     url: "/",
+//     template: "<h1>Hello World</h1>"
+//   })
+
+//   // $urlRouterProvider.otherwise("/");
+// });
+
