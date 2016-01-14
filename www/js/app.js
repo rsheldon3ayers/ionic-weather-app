@@ -27,6 +27,8 @@ angular.module('starter', ['ionic'])
   weather.placeholder = "http://placehold.it/350x150";
   weather.city = "--";
   weather.state = "--";
+  weather.stationID;
+ 
 
 
  
@@ -57,12 +59,27 @@ angular.module('starter', ['ionic'])
       weather.placeholder = res.data.forecast.txt_forecast.forecastday[0].icon_url;
       weather.city = res.data.location.city;
       weather.state = res.data.location.state;
-      console.log("object from wunderground", res.data.forecast, weather.placeholder, weather.city);
-
+      weather.stationID = res.data.current_observation.station_id;
+      console.log("object from wunderground", weather.stationID);
+      return res
     })
-  };
+    .then(function(res){
+      console.log(res.data.current_observation.station_id);
+      var location = res.data.location.city + ',' + res.data.location.state;
+
+      var history = angular.fromJson(localStorage.getItem("searchHistory")) || {};
+      history[location] = res.data.current_observation.station_id;
+      console.log(location, history, res.data.current_observation.station_id);
+      window.localStorage["searchHistory"] = angular.toJson(history);
+
+      
+
+      
+        
+      });
+    };
+  });
   
-});
 // .config(function ($stateProvider, $urlRouterProvider) {
 
 //   $stateProvider.state("root",{
